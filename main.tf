@@ -46,14 +46,10 @@ resource "aws_iam_role" "server_mgmt" {
 resource "aws_dynamodb_table" "manageableEC2Instances"{
   name = "ManageableEC2Instances"
   hash_key = "ec2ID"
-  read_capacity  = 20
-  write_capacity   = 20
+  read_capacity = 20
+  write_capacity = 20
   attribute {
     name = "ec2ID"
-    type = "S"
-  }
-  attribute {
-    name = "dnsName"
     type = "S"
   }
 }
