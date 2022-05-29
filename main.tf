@@ -53,7 +53,7 @@ resource "aws_dynamodb_table" "manageableEC2Instances"{
     type = "S"
   }
   attribute {
-    name = "name"
+    name = "dnsName"
     type = "S"
   }
 }
