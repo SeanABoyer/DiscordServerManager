@@ -10,16 +10,19 @@ resource "aws_iam_role_policy" "server_mgmt" {
     role = aws_iam_role.server_mgmt.id
     policy = jsonencode(
       {
-        "Version": "2012-10-17",
-        "Statement": [
-            {
-                "Sid": "",
-                "Effect": "Allow",
-                "Action": "route53:ListResourceRecordSets",
-                "Resource": "arn:aws:route53:::hostedzone/*"
-            }
-        ]
-      }
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": "dynamodb:Scan",
+            "Resource": [
+                "arn:aws:dynamodb:*:422847484598:table/*/index/*",
+                "arn:aws:dynamodb:us-west-2:422847484598:table/${aws_dynamodb_table.manageableEC2Instances.name}"
+            ]
+        }
+    ]
+}
     )
 }
 
@@ -60,6 +63,11 @@ resource "aws_lambda_function" "server_mgmt_shutdown_server" {
   role = aws_iam_role.server_mgmt.arn
   handler = "function_stop.handler"
   runtime = "python3.9"
+  environment {
+    variables = {
+      TABLE_NAME = aws_dynamodb_table.manageableEC2Instances.name
+    }
+  }
 }
 
 # resource "aws_lambda_function" "server_mgmt_start_server" {
@@ -68,4 +76,9 @@ resource "aws_lambda_function" "server_mgmt_shutdown_server" {
 #   role = aws_iam_role.server_mgmt.arn
 #   handler = "function_start.handler"
 #   runtime = "python3.9"
+#   environment {
+#     variables = {
+#       foo = "bar"
+#     }
+#   }
 # }
