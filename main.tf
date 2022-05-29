@@ -6,10 +6,9 @@ provider "aws" {
   region = "us-west-2"
 }
 
-resource "aws_iam_role_policy" "server_mgmt_lambda_assume_role_policy" {
-  name = "server_mgmt_lambda_assume_role_policy"
-  role = aws_iam_role.server_mgmt_shutdown.id
-  policy = jsonencode(
+resource "aws_iam_role" "server_mgmt_shutdown" {
+  name ="server_mgmt_shutdown"
+  assume_role_policy = jsonencode(
       {
       "Version": "2012-10-17",
       "Statement": [
@@ -24,10 +23,6 @@ resource "aws_iam_role_policy" "server_mgmt_lambda_assume_role_policy" {
       ]
     }
   )
-}
-
-resource "aws_iam_role" "server_mgmt_shutdown" {
-  name ="server_mgmt_shutdown"
 }
 
 resource "aws_lambda_function" "server_mgmt_shutdown_server" {
